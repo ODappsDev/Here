@@ -27,7 +27,7 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.TaxiViewHolder
 
     static class TaxiViewHolder extends RecyclerView.ViewHolder {
 
-        final ItemTaxiBinding binding;
+        private ItemTaxiBinding binding;
 
         TaxiViewHolder(ItemTaxiBinding binding) {
             super(binding.getRoot());
@@ -93,4 +93,6 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.TaxiViewHolder
             Log.d(TAG, "Empty list.");
         }
     }
+
+
 }

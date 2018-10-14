@@ -65,16 +65,13 @@ public abstract class AppDatabase extends RoomDatabase {
      * creates a new instance of the database.
      * The SQLite database is only created when it's accessed for the first time.
      */
-    private static AppDatabase buildDatabase(final Context appContext,
-            final AppExecutors executors) {
+    private static AppDatabase buildDatabase(final Context appContext, final AppExecutors executors) {
         return Room.databaseBuilder(appContext, AppDatabase.class, DATABASE_NAME)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         executors.diskIO().execute(() -> {
-                            // Add a delay to simulate a long-running operation
-                            addDelay();
                             // Generate the data for pre-population
                             AppDatabase database = AppDatabase.getInstance(appContext, executors);
                             List<TaxiEntity> taxis = DataGenerator.generateTaxis();
@@ -85,6 +82,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         });
                     }
                 }).build();
+
     }
 
     /**
@@ -96,21 +94,20 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     }
 
-    private void setDatabaseCreated(){
+    private void setDatabaseCreated() {
         mIsDatabaseCreated.postValue(true);
     }
 
     private static void insertData(final AppDatabase database, final List<TaxiEntity> taxis) {
-        database.runInTransaction(() -> {
-            database.taxiDao().insertAll(taxis);
-        });
+        database.runInTransaction(() -> database.taxiDao().insertAll(taxis));
     }
 
-    private static void addDelay() {
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException ignored) {
-        }
+    public void restart(final AppExecutors executors) {
+        executors.diskIO().execute(() -> this.runInTransaction(() -> {
+            this.taxiDao().deleteAll();
+            List<TaxiEntity> taxis = DataGenerator.generateTaxis();
+            insertData(this, taxis);
+        }));
     }
 
     public LiveData<Boolean> getDatabaseCreated() {

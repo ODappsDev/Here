@@ -8,12 +8,13 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "taxis")
-public class TaxiEntity implements Taxi, Comparable {
+public class TaxiEntity implements Taxi, Comparable<TaxiEntity> {
 
     @PrimaryKey
     private int id;
     private String name;
     private int eta;
+    private int color;
 
     @Override
     public int getId() {
@@ -45,22 +46,33 @@ public class TaxiEntity implements Taxi, Comparable {
     public TaxiEntity() {
     }
 
+    @Override
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     @Ignore
-    public TaxiEntity(int id, String name, int eta) {
+    public TaxiEntity(int id, String name, int eta, int color) {
         this.id = id;
         this.name = name;
         this.eta = eta;
+        this.color = color;
     }
 
     public TaxiEntity(Taxi taxi) {
         this.id = taxi.getId();
         this.name = taxi.getName();
         this.eta = taxi.getEta();
+        this.color = taxi.getColor();
+
     }
 
     @Override
-    public int compareTo(@NonNull Object o) {
-        TaxiEntity taxi = (TaxiEntity) o;
+    public int compareTo(@NonNull TaxiEntity taxi) {
         return Integer.compare(this.eta, taxi.eta);
     }
 }

@@ -22,4 +22,8 @@ public class MyApplication extends Application {
     public DataRepository getRepository() {
         return DataRepository.getInstance(getDatabase());
     }
+
+    public AppExecutors getAppExecutors() {
+        return mAppExecutors;
+    }
 }

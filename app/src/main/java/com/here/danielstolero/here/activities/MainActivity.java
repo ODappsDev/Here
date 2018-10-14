@@ -1,5 +1,6 @@
 package com.here.danielstolero.here.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,7 +10,9 @@ import com.here.danielstolero.here.MyApplication;
 import com.here.danielstolero.here.R;
 import com.here.danielstolero.here.adapters.TaxiAdapter;
 import com.here.danielstolero.here.base.BaseActivity;
+import com.here.danielstolero.here.db.AppDatabase;
 import com.here.danielstolero.here.db.entities.TaxiEntity;
+import com.here.danielstolero.here.models.Taxi;
 import com.here.danielstolero.here.viewmodel.TaxiViewModel;
 
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
@@ -74,18 +78,45 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startRandomData(TaxiViewModel viewModel) {
-        DataRepository repository = ((MyApplication) viewModel.getApplication()).getRepository();
+        MyApplication application = viewModel.getApplication();
+        DataRepository repository = application.getRepository();
+
+        final int[] counter = {0};
 
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if(repository.isFinish()) {
+                Taxi taxi = repository.isFinish();
+                if (taxi != null) {
                     this.cancel();
-                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "The wait is over!!", Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> new AlertDialog.Builder(MainActivity.this)
+                            .setMessage(String.format("The Taxi %s here!!!", taxi.getName()))
+                            .setPositiveButton("Finish", (dialog, which) -> finish())
+                            .setNegativeButton("Restart", (dialog, which) -> {
+                                        application.getDatabase().restart(application.getAppExecutors());
+                                        startRandomData(viewModel);
+                                    }
+                            )
+                            .show());
                 }
 
-                Log.d("Daniel", "task working!!!");
-                repository.updateEta();
+                Log.d("Daniel", "task working " + counter[0] + " times!!!");
+
+                List<TaxiEntity> data = repository.getTaxis().getValue();
+
+                if(data != null) {
+                    Random random = new Random();
+                    int changes = random.nextInt(data.size());
+                    int [] randomIndexes = new int[changes];
+                    int [] ids = new int[changes];
+                    for (int i = 0; i < changes; i++) {
+                        randomIndexes[i] = random.nextInt(data.size());
+                        ids[i] = data.get(randomIndexes[i]).getId();
+                    }
+                    repository.updateEta(ids);
+                }
+
+                counter[0]++;
             }
         };
 

@@ -4,4 +4,5 @@ public interface Taxi {
     int getId();
     String getName();
     int getEta();
+    int getColor();
 }

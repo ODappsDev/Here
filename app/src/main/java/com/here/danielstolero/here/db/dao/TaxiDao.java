@@ -31,12 +31,17 @@ public interface TaxiDao {
     @Query("SELECT * FROM taxis")
     LiveData<List<TaxiEntity>> loadAllProducts();
 
+    @Query("DELETE FROM taxis")
+    void deleteAll();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<TaxiEntity> products);
 
-    @Query("UPDATE taxis SET eta=((eta - 1))")
-    void updateEta();
+    @Query("UPDATE taxis SET eta=(eta-1) WHERE id IN(:ids)")
+    void updateEta(int [] ids);
 
     @Query("SELECT * FROM taxis WHERE eta <= 0")
-    boolean isfinish();
+    TaxiEntity isFinish();
+
+
 }

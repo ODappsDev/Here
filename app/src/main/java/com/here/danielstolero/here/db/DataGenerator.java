@@ -16,6 +16,8 @@
 
 package com.here.danielstolero.here.db;
 
+import android.graphics.Color;
+
 import com.here.danielstolero.here.db.entities.TaxiEntity;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class DataGenerator {
                 taxi.setName(TAXIS[i] + " " + j);
                 taxi.setEta(MIN_ETA + rnd.nextInt(MAX_ETA));
                 taxi.setId(TAXIS.length * i + j + 1);
+                taxi.setColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
                 products.add(taxi);
             }
         }

@@ -5,6 +5,7 @@ import com.here.danielstolero.here.db.entities.TaxiEntity;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
@@ -48,11 +49,12 @@ public class DataRepository {
         return mObservableTaxis;
     }
 
-    public void updateEta() {
-        mDatabase.taxiDao().updateEta();
+    public void updateEta(int [] ids) {
+        mDatabase.taxiDao().updateEta(ids);
     }
 
-    public boolean isFinish() {
-        return mDatabase.taxiDao().isfinish();
+    @Nullable
+    public TaxiEntity isFinish() {
+        return mDatabase.taxiDao().isFinish();
     }
 }
