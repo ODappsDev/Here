@@ -23,10 +23,10 @@ public class DataRepository {
         mDatabase = database;
         mObservableTaxis = new MediatorLiveData<>();
 
-        mObservableTaxis.addSource(mDatabase.taxiDao().loadAllProducts(),
-                productEntities -> {
+        mObservableTaxis.addSource(mDatabase.taxiDao().loadAllTaxis(),
+                taxiEntities -> {
                     if (mDatabase.getDatabaseCreated().getValue() != null) {
-                        mObservableTaxis.postValue(productEntities);
+                        mObservableTaxis.postValue(taxiEntities);
                     }
                 });
     }

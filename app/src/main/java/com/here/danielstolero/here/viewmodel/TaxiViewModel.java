@@ -30,25 +30,25 @@ import androidx.lifecycle.MediatorLiveData;
 public class TaxiViewModel extends AndroidViewModel {
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
-    private final MediatorLiveData<List<TaxiEntity>> mObservableProducts;
+    private final MediatorLiveData<List<TaxiEntity>> mObservableTaxis;
 
     public TaxiViewModel(Application application) {
         super(application);
 
-        mObservableProducts = new MediatorLiveData<>();
+        mObservableTaxis = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
-        mObservableProducts.setValue(null);
+        mObservableTaxis.setValue(null);
 
-        LiveData<List<TaxiEntity>> products = ((MyApplication) application).getRepository().getTaxis();
+        LiveData<List<TaxiEntity>> taxis = ((MyApplication) application).getRepository().getTaxis();
 
-        // observe the changes of the products from the database and forward them
-        mObservableProducts.addSource(products, mObservableProducts::setValue);
+        // observe the changes of the taxis from the database and forward them
+        mObservableTaxis.addSource(taxis, mObservableTaxis::setValue);
     }
 
     /**
      * Expose the LiveData Products query so the UI can observe it.
      */
     public LiveData<List<TaxiEntity>> getTaxis() {
-        return mObservableProducts;
+        return mObservableTaxis;
     }
 }

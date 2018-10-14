@@ -29,19 +29,18 @@ import androidx.room.Query;
 @Dao
 public interface TaxiDao {
     @Query("SELECT * FROM taxis")
-    LiveData<List<TaxiEntity>> loadAllProducts();
+    LiveData<List<TaxiEntity>> loadAllTaxis();
 
     @Query("DELETE FROM taxis")
     void deleteAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<TaxiEntity> products);
+    void insertAll(List<TaxiEntity> entity);
 
     @Query("UPDATE taxis SET eta=(eta-1) WHERE id IN(:ids)")
     void updateEta(int [] ids);
 
     @Query("SELECT * FROM taxis WHERE eta <= 0")
     TaxiEntity isFinish();
-
 
 }

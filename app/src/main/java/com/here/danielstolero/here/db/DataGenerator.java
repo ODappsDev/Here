@@ -37,7 +37,7 @@ public class DataGenerator {
             "Castle", "Shekem", "Habima", "Gordon", "Azrieli", "Hadera"};
 
     public static List<TaxiEntity> generateTaxis() {
-        List<TaxiEntity> products = new ArrayList<>(TAXIS.length * NUM_OF_TAXIS);
+        List<TaxiEntity> entities = new ArrayList<>(TAXIS.length * NUM_OF_TAXIS);
         Random rnd = new Random();
         for (int i = 0; i < TAXIS.length; i++) {
             for (int j = 1; j <= NUM_OF_TAXIS; j++) {
@@ -46,9 +46,9 @@ public class DataGenerator {
                 taxi.setEta(MIN_ETA + rnd.nextInt(MAX_ETA));
                 taxi.setId(TAXIS.length * i + j + 1);
                 taxi.setColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
-                products.add(taxi);
+                entities.add(taxi);
             }
         }
-        return products;
+        return entities;
     }
 }
