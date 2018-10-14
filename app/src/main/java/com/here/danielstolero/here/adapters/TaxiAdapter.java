@@ -57,6 +57,7 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.TaxiViewHolder
         if(taxiList != null) {
             if (mTaxiList == null) {
                 mTaxiList = taxiList;
+                Collections.sort(mTaxiList);
                 notifyItemRangeInserted(0, taxiList.size());
             } else {
                 DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {

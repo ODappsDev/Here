@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Here</string>
     <string name="taxi_eta_in_min">%dm</string>
+    <string name="taxi_eta_in_hour">%dh %dm</string>
 
 </resources>
